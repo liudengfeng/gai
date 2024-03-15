@@ -566,7 +566,7 @@ sidebar_status = st.sidebar.empty()
 def on_slider_change():
     has_graph = st.session_state["has_graph"]
     if not has_graph:
-        sidebar_status.info("选项卡未选中插图，滑块裁剪无效。")
+        st.sidebar.info("选项卡未选中插图，滑块裁剪无效。")
 
 
 st.sidebar.subheader(
