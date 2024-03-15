@@ -503,10 +503,52 @@ def create_math_chat():
     )
 
 
-def extract_math_question(uploaded_file):
+def _process_image(image_data):
+    mime_type = "image/png"
+    # 用文件扩展名称形成 MIME 类型
+    p = Part.from_data(data=image_data, mime_type=mime_type)  # type: ignore
+    duration = None
+    return {"mime_type": mime_type, "part": p, "duration": duration}
+
+
+def process_image_and_prompt(image_data, prompt):
+    # 没有案例
+    contents_info = []
+    if uploaded_file is not None:
+        contents_info.append(_process_image(image_data))
+    contents_info.append(
+        {"mime_type": "text", "part": Part.from_text(prompt), "duration": None}
+    )
+    return contents_info
+
+
+@st.cache_data(
+    ttl=timedelta(hours=1), show_spinner="正在运行多模态模型，提取数学试题..."
+)
+def extract_math_text_for(image_data, prompt):
+    contents = process_image_and_prompt(image_data, prompt)
+    model_name = "gemini-1.0-pro-vision-001"
+    model = load_vertex_model(model_name)
+    generation_config = GenerationConfig(
+        temperature=0.0,
+        top_p=1.0,
+        top_k=32,
+        max_output_tokens=2048,
+    )
+    return parse_generated_content_and_update_token(
+        "多模态AI提取数学题文本",
+        model_name,
+        model.generate_content,
+        contents,
+        generation_config,
+        stream=False,
+    )
+
+
+def extract_math_question(byte_data):
     question = st.session_state["math-question"]
-    question = extract_math_question_text_for(
-        uploaded_file,
+    question = extract_math_text_for(
+        byte_data,
         EXTRACT_TEST_QUESTION_PROMPT.format(question=question, exmples=EXAMPLES),
     )
     # st.session_state["math-question"] = replace_brackets_with_dollar(question)
@@ -785,7 +827,7 @@ if extract_btn:
         ocr = mathpix_ocr_read(byte_data, False)
         st.session_state["math-question"] = ocr["text"]
         logger.info(f'ocr math-question: {ocr["text"]}')
-        extract_math_question(uploaded_file)
+        extract_math_question(byte_data)
 
 display_in_container(response_container, st.session_state["math-question"])
 
