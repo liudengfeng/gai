@@ -61,7 +61,7 @@ CURRENT_CWD: Path = Path(__file__).parent.parent
 IMAGE_DIR: Path = CURRENT_CWD / "resource/multimodal"
 
 st.set_page_config(
-    page_title="数学解题助手",
+    page_title="数学作业帮手",
     page_icon=":abacus:",
     layout="wide",
 )
@@ -661,7 +661,10 @@ right = st.sidebar.slider(
 if "math-assistant" not in st.session_state:
     create_math_chat()
 
+# region tabs
 st.subheader(":bulb: :blue[数学解题助手]", divider="rainbow", anchor=False)
+tab1, tab2, tab3, tab4 = st.tabs(["1️⃣ 上传图片", "2️⃣ 检验解析", "3️⃣ 设置","4️⃣ 解答"])
+# endregion
 
 st.markdown("""✨ :red[请上传清晰、正面、未旋转的数学试题图片。]""")
 elem_cols = st.columns([10, 1, 10])
@@ -826,11 +829,10 @@ if extract_btn:
         byte_data = output.getvalue()
         ocr = mathpix_ocr_read(byte_data, False)
         st.session_state["math-question"] = ocr["text"]
-        logger.info(f'ocr math-question: {ocr["text"]}')
+        # logger.info(f'ocr math-question: {ocr["text"]}')
         # extract_math_question(byte_data)
 
 display_in_container(response_container, st.session_state["math-question"])
-
 
 if cls_btn:
     st.session_state["math-question"] = ""

@@ -42,10 +42,10 @@ def authenticated_menu():
         "pages/29_♊_GAI.py", label="智能AI", icon="♊", help="✨ 进入智能AI页面。"
     )
     st.sidebar.page_link(
-        "pages/31_🧮_数学助手.py",
-        label="数学助手",
+        "pages/31_🧮_数学作业帮手.py",
+        label="数学作业帮手",
         icon="🧮",
-        help="✨ 数学助手。",
+        help="✨ 数学作业帮手。",
         disabled=st.session_state.role
         not in [
             "超级用户",
