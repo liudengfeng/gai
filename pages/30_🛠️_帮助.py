@@ -84,11 +84,11 @@ with st.expander(":bulb: 如何进行单词拼图游戏？", expanded=False):
 
 st.subheader("使用指南-阅读练习", divider="rainbow", anchor="使用指南")
 
-with st.expander(":bulb: 如何进行阅读练习？", expanded=False):
-    fp = str(VIDEO_DIR / "reading_excise.mp4")
-    video_file = open(fp, "rb")
-    video_bytes = video_file.read()
-    st.video(video_bytes)
+# with st.expander(":bulb: 如何进行阅读练习？", expanded=False):
+#     fp = str(VIDEO_DIR / "reading_excise.mp4")
+#     video_file = open(fp, "rb")
+#     video_bytes = video_file.read()
+#     st.video(video_bytes)
 
 # endregion
 
